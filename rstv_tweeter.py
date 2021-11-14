@@ -27,8 +27,8 @@ with open('/home/leroy/RetroStrangeTV/wasplaying.txt', 'w') as f:
 
 if(wasplaying != nowplaying):
 
-    if(len(nowplaying) >= 240):
-        nowplaying_formatted = nowplaying[0:240]
+    if(len(nowplaying) >= 237):
+        nowplaying_formatted = "{}... ".format(nowplaying[0:237])
     else:
         nowplaying_formatted = nowplaying
 
