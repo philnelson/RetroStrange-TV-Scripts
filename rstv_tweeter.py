@@ -26,9 +26,15 @@ with open('/home/leroy/RetroStrangeTV/wasplaying.txt', 'w') as f:
     f.write(nowplaying)
 
 if(wasplaying != nowplaying):
-    print('Sending tweet with currently playing thing which is {}...'.format(nowplaying))
-    update = "{} is now playing on RetroStrange TV".format(nowplaying)
-    print(update)
+
+    if(len(nowplaying) >= 240):
+        nowplaying_formatted = nowplaying[0:240]
+    else:
+        nowplaying_formatted = nowplaying
+
+    print('Sending tweet with currently playing thing which is {}...'.format(nowplaying_formatted))
+    update = "{} is now playing on RetroStrange.TV #RSTV".format(nowplaying_formatted)
     status = api.PostUpdate(update)
+    print("Sent: {}".format(update))
 else:
     print('Same thing as last time is playing, exiting...')
