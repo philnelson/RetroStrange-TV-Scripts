@@ -7,3 +7,4 @@ rstv_config.py
 rstv media list.csv
 roku.json
 mastodon_client_secret
+.vscode
