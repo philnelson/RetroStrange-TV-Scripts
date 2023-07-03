@@ -11,29 +11,30 @@ print('API Connection Test...')
 print(api.VerifyCredentials())
 
 print('Checking what is playing...')
-with open('/home/leroy/RetroStrangeTV/nowplaying.txt') as f:
+with open('{}nowplaying.txt'.format(rstv_config.status_output_path)) as f:
     nowplaying_text = f.readline().rstrip()
+    nowplaying_duration = f.readline().rstrip()
     nowplaying = nowplaying_text
 try:
-    with open('/home/leroy/RetroStrangeTV/wasplaying.txt') as f:
+    with open('{}wasplaying.txt'.format(rstv_config.status_output_path)) as f:
         wasplaying_text = f.readline().rstrip()
         wasplaying = wasplaying_text
 except:
     wasplaying = ''
     print('Error')
 
-with open('/home/leroy/RetroStrangeTV/wasplaying.txt', 'w') as f:
+with open('{}wasplaying.txt'.format(rstv_config.status_output_path), 'w') as f:
     f.write(nowplaying)
 
 if(wasplaying != nowplaying):
 
-    if(len(nowplaying) >= 237):
-        nowplaying_formatted = "{}... ".format(nowplaying[0:237])
+    if(len(nowplaying) >= 229):
+        nowplaying_formatted = "{}... ".format(nowplaying[0:229])
     else:
         nowplaying_formatted = nowplaying
 
     print('Sending tweet with currently playing thing which is {}...'.format(nowplaying_formatted))
-    update = "{} is now playing on RetroStrange.TV #RSTV".format(nowplaying_formatted)
+    update = rstv_config.nowplaying_tweet_string.format(nowplaying_formatted, nowplaying_duration)
     status = api.PostUpdate(update)
     print("Sent: {}".format(update))
 else:

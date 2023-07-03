@@ -2,3 +2,8 @@ rstv_config.py
 .DS_Store
 .venv
 *.pyc
+24 hour playlist.pls
+24 hour playlist.txt
+rstv media list.csv
+roku.json
+mastodon_client_secret
