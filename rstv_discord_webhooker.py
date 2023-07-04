@@ -6,11 +6,12 @@ nowplaying_discord_message_text = rstv_config.nowplaying_discord_message_text
 nowplaying_file_url = rstv_config.nowplaying_file_url
 nowplaying_status_path = rstv_config.nowplaying_status_path
 
-print('Checking what is playing...')
+print('Downloading nowplaying file...')
 try:
     req = urllib.request.urlopen(nowplaying_file_url)
     nowplaying_text = req.readline().rstrip().decode("utf-8")
     nowplaying_duration_and_progress = req.readline().rstrip().decode("utf-8")
+    print('Now Playing: {}...'.format(nowplaying_text))
 except:
     nowplaying = False
 
@@ -18,6 +19,7 @@ try:
     with open('{}rstv1-wasplaying.txt'.format(nowplaying_status_path)) as f:
         wasplaying_text = f.readline().rstrip()
         wasplaying = wasplaying_text
+        print('Was Playing: {}...'.format(wasplaying_text))
 except:
     wasplaying = False
     print('Error')
