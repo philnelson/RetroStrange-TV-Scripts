@@ -1,5 +1,6 @@
 # These all require a closing slash on a full path!
 status_output_path = ''
+catalog_output_path = ''
 movies_path = ''
 tv_path = ''
 shorts_path = ''
@@ -25,10 +26,6 @@ mastodon_client_key = ''
 mastodon_client_secret = ''
 mastodon_access_token = ''
 
-## Twitter (Deprecated)
+## Open Movie DB
 
-consumer_key = ''
-consumer_secret = ''
-access_token_key = ''
-access_token_secret = ''
-nowplaying_tweet_text = ''
+openmoviedb_apikey = "8cabf5a2"

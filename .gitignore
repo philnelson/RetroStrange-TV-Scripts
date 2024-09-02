@@ -8,3 +8,8 @@ rstv media list.csv
 roku.json
 mastodon_client_secret
 .vscode
+data
+Pipfile
+Pipfile.lock
+.python_version
+rstv_content_warehouse
