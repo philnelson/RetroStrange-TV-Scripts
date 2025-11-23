@@ -1,15 +1,17 @@
-import os
-import random
-from pathlib import Path
-from os.path import exists
-import subprocess
-import math
-import rstv_config
 import csv
 import hashlib
-import time
 import json
+import math
+import random
 import re
+import threading
+import time
+import os
+from os.path import exists
+from pathlib import Path
+import subprocess
+
+import rstv_config
 
 skipped_types = []
 updated_types = {}
@@ -46,19 +48,20 @@ generator_config = {
             "items": {},
             "weird_file_detail": {},
         },
-        "ads": {
+        "stationids": {
             "update": True,
             "path": rstv_config.stationid_path,
             "items": {},
             "weird_file_detail": {},
         },
         "staging": {
-            "update": False,
+            "update": True,
             "path": rstv_config.staging_path,
             "items": {},
             "weird_file_detail": {},
         },
     },
+    "number_of_gifs_to_generate": 10,
     "gifs_path": rstv_config.gifs_path,
     "create_gifs": True,
     "overwrite_gifs": False,
@@ -153,7 +156,8 @@ def create_gifs_from_video(file, start, duration, seq):
     
 tic = time.perf_counter()
 
-print("""##########################################################################################
+print("""
+##########################################################################################
 ################################################     ###     #      #     #####    #######
 ################################################  ##  ##  ######  ###  ##  ##   ##   #####
 ####                                       #####      ##     ###  ###      #   #####  ####
@@ -168,7 +172,8 @@ print("""#######################################################################
 ######    ###  ###     ####  ##  ##   #  #  ##  ##     #     ###                      ####
 ########  ###  ###  #   ##        #   ##    ##   ###  ##  ################################
 #####    ####  ###  ##      ####  #   ####  ####    ####     #############################
-##########################################################################################""")
+##########################################################################################
+""")
 total_files_in_catalog = 0
 for media_type in generator_config['types']:
     
@@ -227,105 +232,36 @@ for media_type in generator_config['types']:
             
             print("{} [{}/{}] {}".format(media_type, files_scanned_so_far+1, total_files_to_scan, md5_returned)) 
             print("\tFile: {} \n\tDuration: {}s, Size: {}mb".format(filename, video_length_in_seconds, file_size_mb))
-
-            number_of_gifs = 7
+            
             if generator_config['create_gifs']:
-                first_gif_start = math.floor(video_length_in_seconds / 7)
-                second_gif_start = math.floor(video_length_in_seconds / 7) * 2
-                third_gif_start = math.floor(video_length_in_seconds / 7) * 3
-                fourth_gif_start = math.floor(video_length_in_seconds / 7) * 4
-                fifth_gif_start = math.floor(video_length_in_seconds / 7) * 5
-                sixth_gif_start = math.floor(video_length_in_seconds / 7) * 6
-                seventh_gif_start = math.floor(video_length_in_seconds) - 30
                 
-                if not os.path.exists("{}{}".format(generator_config["gifs_path"], filename[:-4])): 
-                    os.makedirs("{}{}".format(generator_config["gifs_path"], filename[:-4])) 
-                
-                #print("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4], filename, 1))
-                      
-                if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4], filename, 1)):
-                    print("\tGenerating GIF1 at {}".format(first_gif_start))
-                    create_gifs_from_video(f, first_gif_start, 2.5, 1)
-                else:
-                    if generator_config['overwrite_gifs']:
-                        print("\tGenerating GIF1 at {}".format(first_gif_start))
-                        create_gifs_from_video(
-                            f, first_gif_start, 2.5, 1)
-                    #else:
-                    #    print("GIF1 at {} exists, skipping".format(
-                    #        first_gif_start))
-
-                if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4],filename, 2)):
-                    print("\tGenerating GIF2 at {}".format(second_gif_start))
-                    create_gifs_from_video(f, second_gif_start, 2.5, 2)
-                else:
-                    if generator_config['overwrite_gifs']:
-                        print("Overwriting GIF2 at {}".format(second_gif_start))
-                        create_gifs_from_video(
-                            f, second_gif_start, 2.5, 2)
-                    #else:
-                    #    print("GIF2 at {} exists, skipping".format(
-                    #        second_gif_start))
-
-                if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4],filename, 3)):
-                    print("\tGenerating GIF3 at {}".format(third_gif_start))
-                    create_gifs_from_video(f, third_gif_start, 2.5, 3)
-                else:
-                    if generator_config['overwrite_gifs']:
-                        print("\tOverwriting GIF3 at {}".format(third_gif_start))
-                        create_gifs_from_video(
-                            f, third_gif_start, 2.5, 1)
-                    #else:
-                    #    print("GIF3 at {} exists, skipping".format(
-                    #        third_gif_start))
-
-                if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4],filename, 4)):
-                    print("\tGenerating GIF4 at {}".format(fourth_gif_start))
-                    create_gifs_from_video(f, fourth_gif_start, 2.5, 4)
-                else:
-                    if generator_config['overwrite_gifs']:
-                        print("\tOverwriting GIF4 at {}".format(fourth_gif_start))
-                        create_gifs_from_video(
-                            f, fourth_gif_start, 2.5, 1)
-                    #else:
-                    #    print("GIF4 at {} exists, skipping".format(
-                    #        fourth_gif_start))
-                            
-                if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4],filename, 5)):
-                    print("\tGenerating GIF5 at {}".format(fifth_gif_start))
-                    create_gifs_from_video(f, (fifth_gif_start), 2.5, 5)
-                else:
-                    if generator_config['overwrite_gifs']:
-                        print("\tOverwriting GIF5 at {}".format((fifth_gif_start)))
-                        create_gifs_from_video(
-                            f, (fifth_gif_start), 2.5, 1)
-                    #else:
-                        #print("GIF5 at {} exists, skipping".format(
-                        #    (fifth_gif_start)))
-                
-                if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4],filename, 6)):
-                    print("Generating GIF6 at {}".format(sixth_gif_start))
-                    create_gifs_from_video(f, (sixth_gif_start), 2.5, 6)
-                else:
-                    if generator_config['overwrite_gifs']:
-                        print("\tOverwriting GIF5 at {}".format((sixth_gif_start)))
-                        create_gifs_from_video(
-                            f, (sixth_gif_start), 2.5, 1)
-                    #else:
-                        #print("GIF6 at {} exists, skipping".format(
-                        #    (sixth_gif_start)))
-                
-                if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4],filename, 7)):
-                    print("\tGenerating GIF7 at {}".format(seventh_gif_start))
-                    create_gifs_from_video(f, (seventh_gif_start), 2.5, 7)
-                else:
-                    if generator_config['overwrite_gifs']:
-                        print("\tOverwriting GIF7 at frame {}".format((seventh_gif_start)))
-                        create_gifs_from_video(
-                            f, (seventh_gif_start), 2.5, 1)
-                    #else:
-                        #print("GIF6 at {} exists, skipping".format(
-                        #    (seventh_gif_start)))
+                for gif_iterator in range(1,generator_config['number_of_gifs_to_generate']+1):
+                    if gif_iterator == 1:
+                        # 30s from the start
+                        gif_start = math.floor(video_length_in_seconds / generator_config['number_of_gifs_to_generate']) + 30
+                    elif gif_iterator == generator_config['number_of_gifs_to_generate']+1:
+                        # 30s from the end
+                        gif_start = math.floor(video_length_in_seconds) - 30
+                    else:
+                        gif_start = math.floor(video_length_in_seconds / generator_config['number_of_gifs_to_generate']) * gif_iterator
+                    
+                    
+                    if not os.path.exists("{}{}".format(generator_config["gifs_path"], filename[:-4])): 
+                        os.makedirs("{}{}".format(generator_config["gifs_path"], filename[:-4])) 
+                          
+                    if not os.path.exists("{}{}/{}.{}.gif".format(generator_config["gifs_path"],filename[:-4], filename, gif_iterator)):
+                        print("\tGenerating GIF-{} at {}".format(gif_iterator, gif_start))
+                        
+                        create_gifs_from_video(f, gif_start, 2.5, gif_iterator)
+                    else:
+                        if generator_config['overwrite_gifs']:
+                            print("\tOverwriting GIF-{} at {}".format(gif_iterator, gif_start))
+                            create_gifs_from_video(
+                                f, gif_start, 2.5, gif_iterator)
+                        #else:
+                            #print("\tGIF-{} at {} exists, not overwriting".format(gif_iterator,
+                            #    gif_start))
+                                
             files_scanned_so_far +=1
             total_files_in_catalog +=1
         print(" ")
@@ -371,16 +307,25 @@ for media_type in updated_types:
         updated_types[media_type]['good_files']), len(updated_types[media_type]['weird_files'])))
 
     print("    Total duration: {}".format(get_fancy_duration(updated_types[media_type]['total_length_in_seconds'])))
+    with open('{}/RetroStrange TV Catalog {}.csv'.format(rstv_config.catalog_output_path, media_type), 'w', newline='') as csvfile:
+        spamwriter = csv.writer(csvfile, delimiter=',',
+                                quoting=csv.QUOTE_MINIMAL)
+        spamwriter.writerow(['Title','Media Type','Filename', 'Size (In Bytes)', 'Duration In Seconds','GIFs','checksum'])
+        for item in generator_config['types'][media_type]['items']:
+            
+            folder_name = generator_config['types'][media_type]['items'][item]['filename'][:-4]
+            
+            spamwriter.writerow([generator_config['types'][media_type]['items'][item]['video_title'], media_type, generator_config['types'][media_type]['items'][item]['filename'], generator_config['types'][media_type]['items'][item]['size'], generator_config['types'][media_type]['items'][item]['duration_in_seconds'],"https://retrostrange.com/gifs/{}/{}.html".format(folder_name, folder_name), item])
 
-with open('{}/rstv media list good files.csv'.format(rstv_config.catalog_output_path), 'w', newline='') as csvfile:
+with open('{}/RetroStrange TV Catalog in-rotation files.csv'.format(rstv_config.catalog_output_path), 'w', newline='') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=',',
                             quoting=csv.QUOTE_MINIMAL)
-    spamwriter.writerow(['Title','Media Type','Filename', 'Size (In Bytes)', 'Duration In Seconds','Full Path','md5','Issues'])
+    spamwriter.writerow(['Title','Media Type','Filename', 'Size (In Bytes)', 'Duration In Seconds','Full Path','md5'])
     for media_type in updated_types:
         for item in generator_config['types'][media_type]['items']:
             spamwriter.writerow([generator_config['types'][media_type]['items'][item]['video_title'], media_type, generator_config['types'][media_type]['items'][item]['filename'], generator_config['types'][media_type]['items'][item]['size'], generator_config['types'][media_type]['items'][item]['duration_in_seconds'],generator_config['types'][media_type]['items'][item]['path'], item])
             
-with open('{}/rstv media weird files only.csv'.format(rstv_config.catalog_output_path), 'w', newline='') as csvfile:
+with open('{}/RetroStrange TV Catalog problem files only.csv'.format(rstv_config.catalog_output_path), 'w', newline='') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=',',
                             quoting=csv.QUOTE_MINIMAL)
     spamwriter.writerow(['Title','Media Type','Filename', 'Size (In Bytes)', 'Duration In Seconds','Full Path','md5','Issues'])
@@ -388,7 +333,7 @@ with open('{}/rstv media weird files only.csv'.format(rstv_config.catalog_output
         for item in generator_config['types'][media_type]['weird_file_detail']:
             spamwriter.writerow([generator_config['types'][media_type]['weird_file_detail'][item]['video_title'], media_type, generator_config['types'][media_type]['weird_file_detail'][item]['filename'], generator_config['types'][media_type]['weird_file_detail'][item]['size'], generator_config['types'][media_type]['weird_file_detail'][item]['duration_in_seconds'],generator_config['types'][media_type]['weird_file_detail'][item]['path'], item, "Bad Metadata"])
             
-with open('{}/rstv media list combined.csv'.format(rstv_config.catalog_output_path), 'w', newline='') as csvfile:
+with open('{}/RetroStrange TV Catalog all combined.csv'.format(rstv_config.catalog_output_path), 'w', newline='') as csvfile:
     spamwriter = csv.writer(csvfile, delimiter=',',
                             quoting=csv.QUOTE_MINIMAL)
     spamwriter.writerow(['Title','Media Type','Filename', 'Size (In Bytes)', 'Duration In Seconds','Full Path','md5','Issues'])
