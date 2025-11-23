@@ -19,6 +19,7 @@ def generate_media_html(folder_path):
             h1 {{
                 text-align: center;
                 font-size: 3.5em;
+                line-height: 1.5em;
             }}
             ul {{
                 list-style: none;
@@ -32,8 +33,8 @@ def generate_media_html(folder_path):
                 font-size: 2em;
             }}
             p {{
-                font-size: 2em;
-                line-height: 2.2em;
+                font-size: 1.8em;
+                line-height: 1em;
             }}
             img {{
                 max-width: 100%;
@@ -42,8 +43,8 @@ def generate_media_html(folder_path):
         </style>
     </head>
     <body>
-        <h1>{item_name}</h1>
-        <h2>Back to <a href="https://retrostrange.com/gifs">RetroStrange GIFs Gallery</a></h2>
+        <h1>GIFs for "{item_name}"</h1>
+        <p>Back to <a href="https://retrostrange.com/gifs">RetroStrange GIFs Gallery</a> main</p>
         <ul>
     """
 
@@ -56,7 +57,7 @@ def generate_media_html(folder_path):
     # Close HTML tags
     html_content += """
         </ul>
-        <p>Brought to you by <a href="https://retrostrange.com">RetroStrange</a>. Watch our 24/7 stream on <a href="https://live.retrostrange.com">RetroStrange TV</a>.</p>
+        <p>Brought to you by <a href="https://retrostrange.com">RetroStrange</a>. Watch shows like this on <a href="https://live.retrostrange.com">RetroStrange TV</a> and <a href="http://patreon.com/philnelson">support us on Patreon</a>.</p>
     </body>
     </html>
     """
@@ -87,6 +88,12 @@ def generate_individual_html(file_path, folder):
             h1 {{
                 text-align: center;
                 font-size: 3.5em;
+                line-height: 1.5em;
+            }}
+            h2 {{
+                text-align: center;
+                font-size: 2.5em;
+                line-height: 2.2em;
             }}
             ul {{
                 list-style: none;
@@ -100,8 +107,8 @@ def generate_individual_html(file_path, folder):
                 font-size: 2em;
             }}
             p {{
-                font-size: 2em;
-                line-height: 2.2em;
+                font-size: 1.8em;
+                line-height: 1em;
             }}
             img {{
                 max-width: 100%;
@@ -109,19 +116,27 @@ def generate_individual_html(file_path, folder):
             }}
             
             input[type=text] {{
-                width: 300px; 
+                width: 70%;
                 height: 40px;
-                font-size: 1.2em;
+                font-size: 1em;
+            }}
+            
+            footer p {{
+                text-align: center;
+                padding-top: 60px;
             }}
         </style>
     </head>
     <body>
-        <h1>{item_name[:-10]}</h1>
-        <h2>Back to <a href="https://retrostrange.com/gifs">RetroStrange GIFs Gallery</a>, "<a href="https://retrostrange.com/gifs/{folder}/{folder}.html">{folder}</a>" section</h2>
+        <h1>GIF from "{item_name[:-10]}"</h1>
+        <p>Back to <a href="https://retrostrange.com/gifs">RetroStrange GIFs Gallery</a> main page</p>
+        <p>Back "<a href="https://retrostrange.com/gifs/{folder}/{folder}.html">{folder}</a>" section</p>
         <img src="{file_path}" />
         <p>Download or share this file:</p>
         <input type="text" value="https://retrostrange.com/gifs/{urllib.parse.quote(folder)}/{urllib.parse.quote(file_path)}" />
-        <p>Brought to you by <a href="https://retrostrange.com">RetroStrange</a>. Watch our 24/7 stream on <a href="https://live.retrostrange.com">RetroStrange TV</a>.</p>
+        <footer>
+        <p>Brought to you by <a href="https://retrostrange.com">RetroStrange</a>. Watch shows like this on <a href="https://live.retrostrange.com">RetroStrange TV</a> and <a href="http://patreon.com/philnelson">support us on Patreon</a>.</p>
+        </footer>
     </body>
     </html>
     """
@@ -144,27 +159,30 @@ def generate_root_html(directory_path, folder_names):
             h1 {
                 text-align: center;
                 font-size: 3.5em;
+                line-height: 1.5em;
             }
-            
+            h2 {
+                text-align: center;
+                font-size: 2.5em;
+                line-height: 2.2em;
+            }
             ul {
                 
             }
-            
             li {
-                font-size: 2em;
-                line-height: 2.2em;
+                font-size: 1.8em;
+                line-height: 1.5em;
                 padding: 6px 6px 6px 0;
             }
-            
             p {
                 font-size: 2em;
-                line-height: 2.2em;
+                line-height: 1.5em;
             }
         </style>
     </head>
     <body>
         <h1><a href="https://retrostrange.com">RetroStrange</a> GIFs Gallery</h1>
-        <p>7 automatically-generated GIFs from each item in the RetroStrange Media Catalog as seen on <a href="https://live.retrostrange.com">RetroStrange TV</a>. <em>Please do not hotlink the GIFs,</em> but do download, use and share however else you want.</p>
+        <p>10 automatically-generated GIFs from each item in the RetroStrange Media Catalog as seen on <a href="https://live.retrostrange.com">RetroStrange TV</a>. <em>Please do not hotlink the GIFs,</em> but do download, use and share however else you want.</p>
         <ul>
     """
 
@@ -176,7 +194,7 @@ def generate_root_html(directory_path, folder_names):
     # Close HTML tags
     html_content += """
         </ul>
-        <p>Brought to you by <a href="https://retrostrange.com">RetroStrange</a>. Watch our 24/7 stream on <a href="https://live.retrostrange.com">RetroStrange TV</a>.</p>
+        <p>Brought to you by <a href="https://retrostrange.com">RetroStrange</a>. Watch shows like this on <a href="https://live.retrostrange.com">RetroStrange TV</a> and <a href="http://patreon.com/philnelson">support us on Patreon</a>.</p>
     </body>
     </html>
     """
@@ -193,27 +211,27 @@ def generate_html_pages(root_directory):
     subdirectories.sort()
 
     for subdirectory in subdirectories:
-        
-        # Generate HTML for each subdirectory
-        subdirectory_path = os.path.join(root_directory, subdirectory)
-        html_content = generate_media_html(subdirectory_path)
-        
-        print(f"Generating {subdirectory}")
-
-        # Write the HTML file for the subdirectory
-        html_file_path = os.path.join(subdirectory_path, f"{subdirectory}.html")
-        with open(html_file_path, "w") as html_file:
-            html_file.write(html_content)
+        if not subdirectory.startswith("."):
+            # Generate HTML for each subdirectory
+            subdirectory_path = os.path.join(root_directory, subdirectory)
+            html_content = generate_media_html(subdirectory_path)
             
-        # Get all GIFs in the folder
-        gif_files = [file for file in os.listdir(subdirectory_path) if file.lower().endswith('.gif')]
-        gif_files.sort(reverse = True)
-        
-        for gif_file in gif_files:
-            individual_html_content = generate_individual_html(gif_file, subdirectory)
-            individual_html_file_path = os.path.join(subdirectory_path, f"{gif_file}.html")
-            with open(individual_html_file_path, "w") as individual_html_file:
-                individual_html_file.write(individual_html_content)
+            print(f"Generating {subdirectory}")
+    
+            # Write the HTML file for the subdirectory
+            html_file_path = os.path.join(subdirectory_path, f"{subdirectory}.html")
+            with open(html_file_path, "w") as html_file:
+                html_file.write(html_content)
+                
+            # Get all GIFs in the folder
+            gif_files = [file for file in os.listdir(subdirectory_path) if file.lower().endswith('.gif')]
+            gif_files.sort(reverse = True)
+            
+            for gif_file in gif_files:
+                individual_html_content = generate_individual_html(gif_file, subdirectory)
+                individual_html_file_path = os.path.join(subdirectory_path, f"{gif_file}.html")
+                with open(individual_html_file_path, "w") as individual_html_file:
+                    individual_html_file.write(individual_html_content)
 
     # Generate HTML for the root page
     generate_root_html(root_directory, subdirectories)
